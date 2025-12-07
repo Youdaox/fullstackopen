@@ -24,3 +24,19 @@ export const createAnecdote = async (newAnecote) => {
   }
   return await response.json()
 }
+
+export const addVote = async (anecdote) => {
+  const options = {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(anecdote)
+  }
+
+  const response = await fetch(`${baseURL}/${anecdote.id}`, options)
+
+  if (!response.ok) {
+    throw new Error('serverError')
+  }
+
+  return await response.json()
+}

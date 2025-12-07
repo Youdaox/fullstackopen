@@ -1,17 +1,22 @@
 import { useDispatch } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
-import { setNotification } from '../reducers/notificationReducer'
+import { useContext } from 'react'
+import NotificationContext from "../notificationContext"
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
+
+  const { messageDispatch } = useContext(NotificationContext)
 
   const createNew = async event => {
     event.preventDefault()
     const content = event.target.anecdote.value
     
     dispatch(createAnecdote(content))
-    dispatch(setNotification(`new note ${event.target.anecdote.value} created`, 5000))
-    
+    messageDispatch({ type: 'SET', payload: `new note ${event.target.anecdote.value} created` })
+    setTimeout(() => {
+      messageDispatch({ type: 'REMOVE' })
+    }, 5000)
     event.target.anecdote.value = ''
   }
   return (

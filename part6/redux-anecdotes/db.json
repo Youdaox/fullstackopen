@@ -12,7 +12,7 @@
     },
     {
       "content": "The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
-      "votes": 4,
+      "votes": 5,
       "id": "69581"
     },
     {
@@ -32,7 +32,7 @@
     },
     {
       "content": "sadfa",
-      "votes": 2,
+      "votes": 4,
       "id": "0da0"
     },
     {
@@ -58,6 +58,16 @@
     {
       "id": "2e5c",
       "content": "sfgh",
+      "votes": 0
+    },
+    {
+      "id": "cba0",
+      "content": "sdfgfd",
+      "votes": 0
+    },
+    {
+      "id": "ce78",
+      "content": "asdfasdf",
       "votes": 0
     }
   ]

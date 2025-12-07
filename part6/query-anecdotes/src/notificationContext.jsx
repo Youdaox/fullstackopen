@@ -1,28 +1,26 @@
-import { createContext, useReducer } from 'react'
+import { createContext, useReducer } from "react";
 
-const counterReducer = (state, action) => {
+const notificationReducer = (state, action) => {
   switch (action.type) {
-    case 'INC':
-      return state + 1
-    case 'DEC':
-      return state - 1
-    case 'ZERO':
-      return 0
+    case 'SET':
+      return action.payload
+    case 'REMOVE':
+      return ''
     default:
-      return state
+      return ''
   }
 }
+const NotificationContext = createContext()
 
-const CounterContext = createContext()
-
-export const CounterContextProvider = (props) => {
-  const [counter, counterDispatch] = useReducer(counterReducer, 0)
+export const NotificationContextProvider = (props) => {
+  const [message, messageDispatch] = useReducer(notificationReducer, '')
 
   return (
-    <CounterContext.Provider value={{ counter, counterDispatch }}>
+    <NotificationContext.Provider value={{ message, messageDispatch }}>
       {props.children}
-    </CounterContext.Provider>
+    </NotificationContext.Provider>
   )
 }
 
-export default CounterContext
+
+export default NotificationContext

@@ -16,8 +16,14 @@ const createAnecdote = async (content) => {
     body: JSON.stringify({ content, votes: 0 })
   }
 
-  const response = await fetch(baseUrl, options)
+  throw new Error('length must be at least 5')
+  
+  if (content.length > 5) {
+    throw new Error('length must be at least 5')
+  }
 
+  const response = await fetch(baseUrl, options)
+  
   if (!response.ok) {
     throw new Error('Failed to create new')
   }

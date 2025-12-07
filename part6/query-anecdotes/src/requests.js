@@ -15,7 +15,7 @@ export const createAnecdote = async (newAnecote) => {
     body: JSON.stringify(newAnecote)
   }
   if (newAnecote.content.length < 5) {
-    throw new Error('serverError')
+    throw new Error('length must be at least 5')
   }
   const response = await fetch(baseURL, options)
 

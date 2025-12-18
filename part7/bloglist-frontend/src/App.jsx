@@ -1,20 +1,29 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Blog from './components/Blog'
-import LoginForm from './components/LoginForm'
-import CreateForm from './components/CreateForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglabe'
 
-import { addNotification } from './reducers/notificationReducer'
-import { deleteBlog, initializeBlogs, addLike } from './reducers/blogReducer'
-import { login, initializeUser, logout } from './reducers/loginReducer'
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from 'react-router-dom'
+
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
+import Users from './components/Users'
+import Homepage from './components/Homepage'
+import Profile from './components/Profile'
+
+import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUser, logout } from './reducers/loginReducer'
+import { getAllUsers } from './reducers/userReducer'
+
 
 const App = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
 
   const dispatch = useDispatch()
+
+  useEffect( () => {
+    dispatch(getAllUsers())
+  }, [dispatch])
 
   useEffect( () => {
     dispatch(initializeBlogs())
@@ -29,79 +38,37 @@ const App = () => {
   }, [dispatch])
 
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      await dispatch(login(username, password))
-      dispatch(addNotification('successfully logged in', 3000, true))
-      setUsername('')
-      setPassword('')
-    } catch (error) {
-      dispatch(addNotification('wrong credentials', 3000, false))
-    }
-  }
-
   const handleLogout = () => {
     dispatch(logout())
   }
 
-  const LoginFormProps = {
-    handleLogin,
-    username,
-    setUsername,
-    password,
-    setPassword
-  }
-
-  const handleUpdateBlog = async (blog, id) => {
-    try {
-      dispatch(addLike(blog, id))
-      dispatch(addNotification(`blog ${blog.title} updated`, 3000, true))
-    } catch (error) {
-      dispatch(addNotification('error updating blog', 3000, false))
-    }
-  }
-
-  const createFormRef = useRef()
-  const createForm = () => (
-    <Togglable buttonText="create blog" ref={createFormRef}>
-      <CreateForm createFormRef={createFormRef}/>
-    </Togglable>
-  )
-
-  const handleDeleteBlog = async (blog) => {
-    dispatch(deleteBlog(blog.id))
-  }
-
   const user = useSelector(state => state.login)
-  const blogs = useSelector(state => state.blog)
 
   return (
-    <div>
-      <Notification />
-      {!user && LoginForm(LoginFormProps)}
-      {user && (
-        <div>
-          <h2>blogs</h2>
-          <p>{user.name} logged in</p>
-          <button onClick={handleLogout}>logout</button>
-          {createForm()}
-          <div className='blogs_list'>
-            {[...blogs].sort((a, b) => b.likes - a.likes).map(blog => {
-              return (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  updateBlog={handleUpdateBlog}
-                  ownBlog={blog.user.username === user.username ? true : false}
-                  deleteBlog={handleDeleteBlog}
-                />
-              )}
-            )}
+    <Router>
+      <div>
+        {!user && (<LoginForm />)}
+        {user && (
+          <div>
+            <div>
+              <Link to="/users">Users</Link>
+            </div>
+
+            <Notification />
+
+            <h2>blogs</h2>
+            <p>{user.name} logged in</p>
+            <button onClick={handleLogout}>logout</button>
+
+            <Routes>
+              <Route path='/' element={<Homepage />} />
+              <Route path='/users' element={<Users />} />
+              <Route path='/users/:id' element={<Profile />} />
+            </Routes>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </Router>
   )
 }
 

@@ -12,6 +12,7 @@ const Blog = ({ blog, updateBlog, ownBlog, deleteBlog }) => {
       user: blog.user
     }
     await updateBlog(updatedBlog, blog.id)
+
   }
   const handleDelete = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {

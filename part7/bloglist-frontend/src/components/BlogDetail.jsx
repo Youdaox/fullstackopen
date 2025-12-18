@@ -47,6 +47,14 @@ const BlogDetail = () => {
         <button onClick={handleUpdateBlog}> like </button>
       </p>
       <p> added by {blog.author}</p>
+      <div>
+        <h4>comments</h4>
+        <ul>
+          {blog.comments.map(c => (
+            <li key={c}> {c} </li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

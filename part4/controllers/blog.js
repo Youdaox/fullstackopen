@@ -1,6 +1,6 @@
 const BlogRouter = require('express').Router()
 const Blog = require('../models/Blog')
-const User = require('../models/User')
+const Comment = require('../models/Comment')
 const jwt = require('jsonwebtoken')
 const middleware = require('../utils/middleware')
 
@@ -23,6 +23,7 @@ BlogRouter.post('/', middleware.userExtractor, async (request, response) => {
       user: user._id,
       url: body.url,
       likes: body.likes || 0,
+      comments: body.comments
   })
 
   const result = await blog.save()
@@ -42,7 +43,7 @@ BlogRouter.put('/:id', async (request, response) => {
   if (!(blog.user.toString() === blogToUpdate.user.id.toString())) {
     return response.status(401).json({ error: 'not authorized' })
   }
-  console.log(blogToUpdate.user)
+ 
   const id = blog._id
   await Blog.findByIdAndDelete(id)
 
@@ -53,6 +54,7 @@ BlogRouter.put('/:id', async (request, response) => {
     user: blogToUpdate.user.id,
     url: blogToUpdate.url,
     likes: blogToUpdate.likes || 0,
+    comments: blogToUpdate.comments
   })
 
   const result = await updatedBlog.save()
@@ -73,4 +75,21 @@ BlogRouter.delete('/:id', middleware.userExtractor, async (request, response) =>
   await Blog.findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
+
+BlogRouter.post('/:id/comments', async (request, response) => {
+  const body = request.body
+
+  const blog = await Blog.findById(request.params.id)
+
+  const comment = new Comment({
+      blog: blog._id,
+      comment: body.comment
+  })
+
+  const result = await comment.save()
+  blog.comments = blog.comments.concat(result.comment)
+  await blog.save()
+  response.status(201).json(result)
+})
+
 module.exports = BlogRouter

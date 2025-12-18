@@ -88,8 +88,8 @@ BlogRouter.post('/:id/comments', async (request, response) => {
 
   const result = await comment.save()
   blog.comments = blog.comments.concat(result.comment)
-  await blog.save()
-  response.status(201).json(result)
+  const updatedBlog = await blog.save()
+  response.status(201).json(updatedBlog)
 })
 
 module.exports = BlogRouter

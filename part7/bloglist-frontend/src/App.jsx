@@ -11,6 +11,7 @@ import Notification from './components/Notification'
 import Users from './components/Users'
 import Homepage from './components/Homepage'
 import Profile from './components/Profile'
+import BlogDetail from './components/BlogDetail'
 
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, logout } from './reducers/loginReducer'
@@ -50,20 +51,22 @@ const App = () => {
         {!user && (<LoginForm />)}
         {user && (
           <div>
-            <div>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px' }}>
+              <Link to="/">Blogs</Link>
               <Link to="/users">Users</Link>
+              <p>{user.username} logged in</p>
+              <button onClick={handleLogout}>logout</button>
             </div>
 
             <Notification />
 
             <h2>blogs</h2>
-            <p>{user.name} logged in</p>
-            <button onClick={handleLogout}>logout</button>
 
             <Routes>
               <Route path='/' element={<Homepage />} />
               <Route path='/users' element={<Users />} />
               <Route path='/users/:id' element={<Profile />} />
+              <Route path='/blogs/:id' element={<BlogDetail />} />
             </Routes>
           </div>
         )}

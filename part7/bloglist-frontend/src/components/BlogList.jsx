@@ -1,25 +1,9 @@
 import Blog from './Blog'
-import { useSelector, useDispatch } from 'react-redux'
-import { deleteBlog, addLike } from '../reducers/blogReducer'
-import { addNotification } from '../reducers/notificationReducer'
+import { useSelector } from 'react-redux'
 
 const BlogList = () => {
   const blogs = useSelector(state => state.blog)
   const user = useSelector(state => state.login)
-  const dispatch = useDispatch()
-
-  const handleUpdateBlog = async (blog, id) => {
-    try {
-      dispatch(addLike(blog, id))
-      dispatch(addNotification(`blog ${blog.title} updated`, 3000, true))
-    } catch (error) {
-      dispatch(addNotification('error updating blog', 3000, false))
-    }
-  }
-
-  const handleDeleteBlog = async (blog) => {
-    dispatch(deleteBlog(blog.id))
-  }
 
   return (
     <div className='blogs_list'>
@@ -28,9 +12,7 @@ const BlogList = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            updateBlog={handleUpdateBlog}
             ownBlog={blog.user.username === user.username ? true : false}
-            deleteBlog={handleDeleteBlog}
           />
         )}
       )}

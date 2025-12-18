@@ -1,50 +1,22 @@
-import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { deleteBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, updateBlog, ownBlog, deleteBlog }) => {
-  const [visible, setVisible] = useState(false)
+import { Link } from 'react-router-dom'
 
-  const addLike = async () => {
-    const updatedBlog = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes +1,
-      user: blog.user
-    }
-    await updateBlog(updatedBlog, blog.id)
+const Blog = ({ blog, ownBlog }) => {
 
-  }
+  const dispatch = useDispatch()
+
   const handleDelete = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      await deleteBlog(blog)
+      await dispatch(deleteBlog(blog.id))
     }
-  }
-  const handleView = () => {
-    return (
-      <div>
-        <div>
-          <p>{blog.title}
-            <button onClick={() => setVisible(false)}> hide </button>
-          </p>
-          <p>{blog.url}</p>
-          <p>{blog.author}</p>
-          <p>likes {blog.likes}
-            <button onClick={addLike}> like </button>
-          </p>
-        </div>
-        {ownBlog && <button onClick={handleDelete}>delete</button>}
-      </div>
-    )
   }
 
   return (
     <div>
       <div className="blog">
-        {blog.title} {blog.author}
-        <button className="blogView" onClick={() => setVisible(true)}> view </button>
-      </div>
-      <div className="blogDetail">
-        {visible && handleView()}
+        <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
       </div>
     </div>
   )}

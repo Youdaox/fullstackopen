@@ -35,30 +35,13 @@ BlogRouter.post('/', middleware.userExtractor, async (request, response) => {
 BlogRouter.put('/:id', async (request, response) => {
   const blogToUpdate = request.body
 
-  if (!blogToUpdate.user) {
-    return response.status(401).json({ error: 'userId missing or not valid' })
-  }
-  const blog = await Blog.findById(request.params.id)
-
-  if (!(blog.user.toString() === blogToUpdate.user.id.toString())) {
-    return response.status(401).json({ error: 'not authorized' })
-  }
- 
-  const id = blog._id
-  await Blog.findByIdAndDelete(id)
-
-  const updatedBlog = new Blog({
-    _id: id,
-    title: blogToUpdate.title,
-    author: blogToUpdate.author,
-    user: blogToUpdate.user.id,
-    url: blogToUpdate.url,
+  const updatedBlog = {
     likes: blogToUpdate.likes || 0,
     comments: blogToUpdate.comments
-  })
+  }
 
-  const result = await updatedBlog.save()
-  response.status(201).json(result)
+  const result = await Blog.findByIdAndUpdate(request.params.id, updatedBlog, { new: true })
+  response.status(200).json(result)
 })
 
 BlogRouter.delete('/:id', middleware.userExtractor, async (request, response) => {

@@ -24,17 +24,13 @@ const BlogDetail = () => {
 
   const handleUpdateBlog = async () => {
     const updatedBlog = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
       likes: blog.likes +1,
-      user: blog.user
     }
     try {
       await dispatch(addLike(updatedBlog, blog.id))
       dispatch(addNotification(`blog ${blog.title} updated`, 3000, true))
     } catch (error) {
-      dispatch(addNotification('error updating blog', 3000, false))
+      dispatch(addNotification(error.message, 3000, false))
     }
   }
 

@@ -1,10 +1,8 @@
-PUT http://localhost:3003/api/blogs/69115cc5622caab889061a87
+PUT http://localhost:3003/api/blogs/691c1ae4c3c08df3efa17f9f
 Content-Type: application/json
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlvdWRhbyIsImlkIjoiNjkxYzBjZTU3NWY1MzgzYTkwYTU5YjYwIiwiaWF0IjoxNzY2MDYwODQ2LCJleHAiOjE3NjYwNjQ0NDZ9.5_K3qNIUF-8oM8jKBb32Y1hZozduJ-1qjeF1zjZwGv8
 
 {
-  "title": "third blog",
-  "author": "ryanl",
-  "url": "http://localhost:3003/api/blogs",
-  "likes": 32
+  "likes": 32,
+  "user": "6916d7ee0d9b2adad2eaae14"
 }

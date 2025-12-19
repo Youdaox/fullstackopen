@@ -1,29 +1,42 @@
-import { useState, useImperativeHandle } from 'react'
+import { useState, useImperativeHandle } from "react";
+import {
+  Button,
+} from "@mui/material"
 
 const Togglable = (props) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
 
-  const hideWhenVisible = { display: visible ? 'none': '' }
-  const showWhenVisible = { display: visible ? '': 'none' }
+  const hideWhenVisible = { display: visible ? "none" : "" };
+  const showWhenVisible = { display: visible ? "" : "none" };
 
   const toggle = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
   useImperativeHandle(props.ref, () => {
-    return { toggle }
-  })
+    return { toggle };
+  });
 
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggle}> {props.buttonText}</button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={toggle}>
+          {props.buttonText}
+        </Button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggle}>cancel</button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={toggle}>
+            cancel
+        </Button>
       </div>
     </div>
-  )
-}
-export default Togglable
+  );
+};
+export default Togglable;

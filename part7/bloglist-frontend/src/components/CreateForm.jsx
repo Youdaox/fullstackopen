@@ -1,29 +1,32 @@
-import { useDispatch } from 'react-redux'
-import TextInput from './TextInput'
-import { useState } from 'react'
-import { createBlog } from '../reducers/blogReducer'
-import { addNotification } from '../reducers/notificationReducer'
+import { useDispatch } from "react-redux";
+import TextInput from "./TextInput";
+import { useState } from "react";
+import { createBlog } from "../reducers/blogReducer";
+import { addNotification } from "../reducers/notificationReducer";
+import {
+  Button,
+} from "@mui/material"
 
 const CreateForm = ({ createFormRef }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const handleCreateBlog = async (event) => {
     try {
-      event.preventDefault()
-      dispatch(createBlog({ title, author, url }))
-      createFormRef.current.toggle()
-      dispatch(addNotification(`a new blog ${title} added`, 3000, true))
+      event.preventDefault();
+      dispatch(createBlog({ title, author, url }));
+      createFormRef.current.toggle();
+      dispatch(addNotification(`a new blog ${title} added`, 3000, true));
     } catch (error) {
-      dispatch(addNotification('cannot add blog', 3000, false))
+      dispatch(addNotification("cannot add blog", 3000, false));
     }
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+  };
 
   return (
     <div>
@@ -47,9 +50,16 @@ const CreateForm = ({ createFormRef }) => {
           setValue={setUrl}
           data-testid="urlid"
         />
-        <button type="submit">create</button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+        >
+          create
+        </Button>
       </form>
     </div>
-  )}
+  );
+};
 
-export default CreateForm
+export default CreateForm;

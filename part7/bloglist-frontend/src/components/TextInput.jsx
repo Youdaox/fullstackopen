@@ -1,15 +1,17 @@
+import {
+  TextField,
+} from "@mui/material"
+
+
 const TextInput = ({ text, value, setValue }) => (
   <div>
-    <label>
-      {text}
-      <input
-        type="tezt"
-        value={value}
-        onChange={({ target }) => setValue(target.value)}
-      >
-      </input>
-    </label>
+    <TextField
+      label={text}
+      type="tezt"
+      value={value}
+      onChange={({ target }) => setValue(target.value)}
+    ></TextField>
   </div>
-)
+);
 
-export default TextInput
+export default TextInput;

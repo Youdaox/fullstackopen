@@ -1,57 +1,58 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { addLike, initializeBlogs, createComment } from '../reducers/blogReducer'
-import { addNotification } from '../reducers/notificationReducer'
-import { useEffect, useState } from 'react'
-
-import blogService from '../services/blogs'
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import {
+  addLike,
+  initializeBlogs,
+  createComment,
+} from "../reducers/blogReducer";
+import { addNotification } from "../reducers/notificationReducer";
+import { useEffect, useState } from "react";
 
 const BlogDetail = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [dispatch])
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
-  const [comment, setComment] = useState('')
+  const [comment, setComment] = useState("");
 
-  const id = useParams().id
-  const blog = useSelector(state => state.blog.find(b => b.id === id))
+  const id = useParams().id;
+  const blog = useSelector((state) => state.blog.find((b) => b.id === id));
 
   if (!blog) {
-    return null
+    return null;
   }
 
   const handleUpdateBlog = async () => {
     const updatedBlog = {
-      likes: blog.likes +1,
-    }
+      likes: blog.likes + 1,
+    };
     try {
-      await dispatch(addLike(updatedBlog, blog.id))
-      dispatch(addNotification(`blog ${blog.title} updated`, 3000, true))
+      await dispatch(addLike(updatedBlog, blog.id));
+      dispatch(addNotification(`blog ${blog.title} updated`, 3000, true));
     } catch (error) {
-      dispatch(addNotification(error.message, 3000, false))
+      dispatch(addNotification(error.message, 3000, false));
     }
-  }
+  };
 
   const handleComment = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const commentObj = {
-      comment: comment
-    }
-    await dispatch(createComment(commentObj, id))
-    setComment('')
-  }
+      comment: comment,
+    };
+    await dispatch(createComment(commentObj, id));
+    setComment("");
+  };
 
   return (
     <div>
-      <h2>
-        {blog.title}
-      </h2>
+      <h2>{blog.title}</h2>
       <p>
         <a href={blog.url}>{blog.url}</a>
       </p>
-      <p>{blog.likes} likes
+      <p>
+        {blog.likes} likes
         <button onClick={handleUpdateBlog}> like </button>
       </p>
       <p> added by {blog.author}</p>
@@ -59,20 +60,20 @@ const BlogDetail = () => {
         <h4>comments</h4>
         <form onSubmit={handleComment}>
           <input
-            type='text'
+            type="text"
             value={comment}
-            onChange={(e) => setComment(e.target.value)
-            }/>
-          <button type='submit'>add comment</button>
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <button type="submit">add comment</button>
         </form>
         <ul>
-          {blog.comments.map(c => (
+          {blog.comments.map((c) => (
             <li key={c}> {c} </li>
           ))}
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default BlogDetail
+export default BlogDetail;

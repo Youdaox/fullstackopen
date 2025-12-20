@@ -1,9 +1,5 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  Button,
-} from "@mui/material"
-
 
 const Users = () => {
   const users = useSelector((state) => state.user);

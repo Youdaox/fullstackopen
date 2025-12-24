@@ -40,7 +40,7 @@ const typeDefs = /* GraphQL */`
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
+    allBooks(author: String, genre: String): [Book!]
     allAuthors: [Author!]!
   }
 
@@ -63,15 +63,21 @@ const resolvers = {
     bookCount: async () => Book.find({}),
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      let result = books
+      let books
 
       if (args.author) {
-        result = result.filter(b => b.author === args.author)
+        const author = await Author.find({ name: args.author})
+        books = await Book.find({ author: author })
       } 
       if (args.genre) {
-        result = result.filter(b => b.genres.includes(args.genre))
+        books = await Book.find({ genres: args.genre })
+        console.log(books)
       }
-      return Book.find({})
+      if (args.author && args.genre) {
+        const author = await Author.find({ name: args.author})
+        books = await Book.find({ author: author, genres: args.genre })
+      }
+      return books
     },
     allAuthors: async () => Author.find({})
   },

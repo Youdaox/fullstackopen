@@ -84,24 +84,27 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args) => {
       const authorName = args.author 
-      const authorExists = Author.find({ name: authorName })
+      let authorExists = await Author.findOne({ name: authorName })
       if (!authorExists){
-        const author = new Author({
+        const newAuthor = new Author({
           name: args.author,
         })
-        await author.save()
+        const author = await newAuthor.save()
+        authorExists = author
       }
-      const book = new Book({ ...args, id: uuid() })
+
+      const book = new Book({ ...args, author: authorExists})
+      console.log(book)
       await book.save()
       return book
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
       if (!author) {
         return null
       }
-      const updatedAuthor = {...author, born: args.setBornTo}
-      authors = authors.map(a => a.name === args.name ? updatedAuthor : a)
+
+      const updatedAuthor = await Author.findByIdAndUpdate(author._id, { born: args.setBornTo }, { new: true })
       return updatedAuthor
     }
   }

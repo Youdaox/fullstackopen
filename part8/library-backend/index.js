@@ -1,6 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v1: uuid } = require('uuid')
+const { GraphQLError } = require('graphql')
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
@@ -60,7 +60,7 @@ const typeDefs = /* GraphQL */`
 
 const resolvers = {
   Query: {
-    bookCount: async () => Book.find({}),
+    bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
       let books
@@ -92,15 +92,32 @@ const resolvers = {
       const authorName = args.author 
       let authorExists = await Author.findOne({ name: authorName })
       if (!authorExists){
+        if (args.author.length < 4) {
+          throw new GraphQLError('author name too short',{
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author
+            }
+          })
+        }
         const newAuthor = new Author({
           name: args.author,
         })
         const author = await newAuthor.save()
         authorExists = author
       }
+    
+
+      if (args.title.length < 5) {
+        throw new GraphQLError('book title too short',{
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title,
+          }
+        })
+      }
 
       const book = new Book({ ...args, author: authorExists})
-      console.log(book)
       await book.save()
       return book
     },
@@ -109,7 +126,7 @@ const resolvers = {
       if (!author) {
         return null
       }
-
+    
       const updatedAuthor = await Author.findByIdAndUpdate(author._id, { born: args.setBornTo }, { new: true })
       return updatedAuthor
     }

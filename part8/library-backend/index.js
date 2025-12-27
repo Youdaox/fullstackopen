@@ -88,28 +88,32 @@ const resolvers = {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      let books
+      if (args.author && args.genre) {
+        const author = await Author.find({ name: args.author})
+        return await Book.find({ author: author, genres: args.genre })
+      }
 
       if (args.author) {
         const author = await Author.find({ name: args.author})
-        books = await Book.find({ author: author })
+        return await Book.find({ author: author })
       } 
       if (args.genre) {
-        books = await Book.find({ genres: args.genre })
-        console.log(books)
+        return await Book.find({ genres: args.genre })
       }
-      if (args.author && args.genre) {
-        const author = await Author.find({ name: args.author})
-        books = await Book.find({ author: author, genres: args.genre })
-      }
-      return books
+      return await Book.find({})
     },
     allAuthors: async () => Author.find({})
   },
   Author: {
-    bookCount: (root) => {
-      const authorBooks = books.filter(b => b.author === root.name)
-      return 5
+    bookCount: async (root) => {
+      const count = await Book.find({ author: root._id })
+      
+      return count.length
+    }
+  },
+  Book: {
+    author: async (root) => {
+      return Author.findById(root.author)
     }
   },
   Mutation: {
@@ -211,7 +215,7 @@ const server = new ApolloServer({
 })
 
 startStandaloneServer(server, {
-  listen: { port: 4000 },
+  listen: { port: 4001 },
   context: async ({req, res}) => {
     const auth = req ? req.headers.authorization : null
     if (auth && auth.startsWith('Bearer')) {

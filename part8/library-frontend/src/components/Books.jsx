@@ -9,6 +9,10 @@ const Books = () => {
   }
 
   const books = result.data.allBooks
+  console.log(books)
+  if (!books) {
+    return (<p> currently no books</p>)
+  }
 
   return (
     <div>
@@ -24,7 +28,7 @@ const Books = () => {
           {books.map((a) => (
             <tr key={a.id}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           ))}

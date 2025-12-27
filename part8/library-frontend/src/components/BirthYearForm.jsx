@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { EDIT_BORN, AUTHOR_NAMES } from '../queries'
+import { EDIT_BORN, AUTHOR_NAMES, GET_AUTHORS } from '../queries'
 import { useMutation, useQuery } from "@apollo/client/react"
 
 const BirthYearForm = () => {
@@ -7,6 +7,7 @@ const BirthYearForm = () => {
   const [born, setBorn] = useState('')
 
   const [editBorn] = useMutation(EDIT_BORN)
+
   const result = useQuery(AUTHOR_NAMES)
 
   if (result.loading) {

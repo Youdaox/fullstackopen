@@ -1,17 +1,21 @@
-import { GET_BOOKS } from "../queries"
+import { GET_BOOKS, BOOKS_BY_GENRE } from "../queries"
 import { useQuery } from "@apollo/client/react"
 import { useState, useEffect } from 'react'
 
 const Books = () => {
   const [filter, setFilter] = useState('')
+  const resultAllBooks = useQuery(GET_BOOKS)
 
-  const result = useQuery(GET_BOOKS)
+  const result = useQuery(BOOKS_BY_GENRE, 
+    { variables: { genre: filter },
+    skip: !filter
+  })
   
-  if (result.loading) {
+  if (result.loading || resultAllBooks.loading) {
     return (<p> loading...</p>)
   }
 
-  let books = result.data.allBooks
+  let books = resultAllBooks.data.allBooks
 
   if (!books) {
     return (<p> currently no books</p>)
@@ -22,7 +26,7 @@ const Books = () => {
     .filter(genre => genre && genre !== "[null]"))]
 
   if (filter) {
-    books = books.filter(b => b.genres.includes(filter))
+    books = result.data.allBooks
   }
   
   return (

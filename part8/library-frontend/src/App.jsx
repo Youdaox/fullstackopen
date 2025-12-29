@@ -3,6 +3,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import BirthYearForm from './components/BirthYearForm'
+import Recommendation from './components/Recommendation'
 import { useState } from 'react'
 import {
   Routes, Route, Link
@@ -39,6 +40,9 @@ const App = () => {
             <button>
               <Link to='/edit'>edit</Link>
             </button>
+            <button>
+              <Link to='/recommend'>recommend</Link>
+            </button>
             <button onClick={logout}>
               logout
             </button>
@@ -57,6 +61,7 @@ const App = () => {
         <Route path='/create' element={<NewBook setMessage={setMessage} token={token} />} />
         <Route path='/edit' element={<BirthYearForm token={token} />} />
         <Route path='/login' element={<LoginForm setToken={setToken} />} />
+        <Route path='/recommend' element={<Recommendation />} />
       </Routes>
     </div>
   )

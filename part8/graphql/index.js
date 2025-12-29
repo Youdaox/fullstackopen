@@ -56,6 +56,7 @@ const typeDefs = /* GraphQL */`
     personCount: Int!
     allPersons(phone: YesNo): [Person!]!
     findPerson(name: String!): Person
+    booksByGenre(genre: String!): [Book!]
   }
 
   type Mutation {

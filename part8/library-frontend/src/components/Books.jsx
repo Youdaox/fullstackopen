@@ -1,6 +1,6 @@
 import { GET_BOOKS, BOOKS_BY_GENRE } from "../queries"
 import { useQuery } from "@apollo/client/react"
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const Books = () => {
   const [filter, setFilter] = useState('')
@@ -8,7 +8,7 @@ const Books = () => {
 
   const result = useQuery(BOOKS_BY_GENRE, 
     { variables: { genre: filter },
-    skip: !filter
+    skip: !filter,
   })
   
   if (result.loading || resultAllBooks.loading) {

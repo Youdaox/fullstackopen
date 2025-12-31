@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ADD_BOOK, GET_BOOKS, GET_AUTHORS } from "../queries"
+import { ADD_BOOK, GET_BOOKS, GET_AUTHORS, BOOKS_BY_GENRE } from "../queries"
 import { useMutation } from "@apollo/client/react"
 
 const NewBook = ({setMessage}) => {
@@ -14,7 +14,14 @@ const NewBook = ({setMessage}) => {
     onError: (error) => {
       const messages = error.graphQLErrors.map(e => e.message).join('\n')
       setMessage(messages)
-    }
+    },
+    update: (cache, response) => {
+      cache.updateQuery({ query: BOOKS_BY_GENRE }, () => {
+        return {
+          allBooks: [],
+        }
+      })
+    },
   })
 
   const submit = async (event) => {

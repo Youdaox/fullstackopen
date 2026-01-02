@@ -4,6 +4,10 @@ const typeDefs = /* GraphQL */`
     NO
   }
 
+  type Subscription {
+    personAdded: Person!
+  }    
+  
   type User {
     username: String!
     friends: [Person!]!
@@ -22,6 +26,7 @@ const typeDefs = /* GraphQL */`
   type Person {
     name: String!
     phone: String
+    friendOf: [User!]!
     address: Address!
     id: ID!
   }

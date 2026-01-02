@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken')
 const Person = require('./models/Person')
 const User = require('./models/User')
 
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
 const resolvers = {
   Query: {
     me: (root, args, context) => {
@@ -11,10 +14,10 @@ const resolvers = {
     personCount: async () => Person.collection.countDocuments(),
     allPersons: async (root, args) => {
       if (!args.phone) {
-        return Person.find({})
+        return Person.find({}).populate('friendOf')
       }
 
-      return Person.find({ phone: { $exists: args.phone === 'YES' } })
+      return Person.find({ phone: { $exists: args.phone === 'YES' } }).populate('friendOf')
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name })
   },
@@ -24,7 +27,7 @@ const resolvers = {
         street,
         city,
       }
-    }
+    },
   },
   Mutation: {
     addPerson: async (root, args, context) => {
@@ -51,6 +54,9 @@ const resolvers = {
           }
         })
       }
+
+      pubsub.publish('PERSON_ADDED', { personAdded: person })
+
       return person
     },
     editNumber: async (root, args) => {
@@ -119,7 +125,12 @@ const resolvers = {
 
       return currentUser
     },
-  }
+  },
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('PERSON_ADDED')
+    },
+  },
 }
 
 module.exports = resolvers

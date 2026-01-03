@@ -28,13 +28,13 @@ const resolvers = {
       }
       return await Book.find({})
     },
-    allAuthors: async () => Author.find({})
+    allAuthors: async () => Author.find({}).populate('books')
   },
   Author: {
     bookCount: async (root) => {
-      const count = await Book.find({ author: root._id })
+      const count = root.books.length
       
-      return count.length
+      return count
     }
   },
   Book: {
@@ -84,6 +84,9 @@ const resolvers = {
 
       const book = new Book({ ...args, author: authorExists})
       await book.save()
+
+      authorExists.books = authorExists.books.concat(book)
+      await authorExists.save()
 
       pubsub.publish('BOOK_ADDED', { bookAdded: book })
       return book

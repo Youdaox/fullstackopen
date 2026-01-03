@@ -8,7 +8,8 @@ import { useState } from 'react'
 import {
   Routes, Route, Link
 } from 'react-router-dom'
-import { useApolloClient } from '@apollo/client/react'
+import { useApolloClient, useSubscription  } from '@apollo/client/react'
+import { BOOK_ADDED, GET_BOOKS } from './queries'
 
 const App = () => {
   const [message, setMessage] = useState('')
@@ -21,6 +22,18 @@ const App = () => {
     client.clearStore()
   }
 
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      console.log(data)
+      window.alert(`new book ${data.data.bookAdded.title} added!`)
+
+      client.cache.updateQuery({ query: GET_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(data.data.bookAdded)
+        }
+      })
+    }
+  })
 
   return (
     <div>

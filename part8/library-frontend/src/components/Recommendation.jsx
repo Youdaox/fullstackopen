@@ -1,4 +1,4 @@
-import { BOOKS_BY_GENRE, GET_USER } from "../queries"
+import { GET_BOOKS, GET_USER } from "../queries"
 import { useQuery } from "@apollo/client/react"
 
 const Recommendations = () => {
@@ -6,7 +6,7 @@ const Recommendations = () => {
 
   const genre = resultUser.data?.me.favoriteGenre || null
 
-  const result = useQuery(BOOKS_BY_GENRE, 
+  const result = useQuery(GET_BOOKS, 
     { variables: { genre: genre },
     skip: !genre
   })

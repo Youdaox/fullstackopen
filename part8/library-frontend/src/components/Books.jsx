@@ -1,33 +1,25 @@
-import { GET_BOOKS, BOOKS_BY_GENRE } from "../queries"
+import { GET_BOOKS } from "../queries"
 import { useQuery } from "@apollo/client/react"
 import { useState } from 'react'
 
 const Books = () => {
   const [filter, setFilter] = useState('')
-  const resultAllBooks = useQuery(GET_BOOKS)
 
-  const result = useQuery(BOOKS_BY_GENRE, 
-    { variables: { genre: filter },
-    skip: !filter,
+  const result = useQuery(GET_BOOKS, 
+    { variables: { genre: filter ?? null },
   })
   
-  if (result.loading || resultAllBooks.loading) {
+  if (result.loading) {
     return (<p> loading...</p>)
   }
 
-  let books = resultAllBooks.data.allBooks
+  let books = result.data.allBooks
 
   if (!books) {
     return (<p> currently no books</p>)
   }
 
-  const genres = [...new Set(books
-    .flatMap(book => book.genres)
-    .filter(genre => genre && genre !== "[null]"))]
-
-  if (filter) {
-    books = result.data.allBooks
-  }
+  const genres = [...new Set(books.reduce((s, b) => s.concat(b.genres), []))]
   
   return (
     <div>

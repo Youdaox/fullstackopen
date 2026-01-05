@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ADD_BOOK, GET_BOOKS, GET_AUTHORS, BOOKS_BY_GENRE } from "../queries"
+import { ADD_BOOK, GET_BOOKS, GET_AUTHORS } from "../queries"
 import { useMutation } from "@apollo/client/react"
 
 const NewBook = ({setMessage}) => {
@@ -10,23 +10,15 @@ const NewBook = ({setMessage}) => {
   const [genres, setGenres] = useState([])
 
   const [addBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: GET_BOOKS }, { query: GET_AUTHORS }],
+    refetchQueries: "active",
     onError: (error) => {
-      const messages = error.graphQLErrors.map(e => e.message).join('\n')
-      setMessage(messages)
-    },
-    update: (cache, response) => {
-      cache.updateQuery({ query: BOOKS_BY_GENRE }, () => {
-        return {
-          allBooks: [],
-        }
-      })
+      setMessage('error')
     },
   })
 
   const submit = async (event) => {
     event.preventDefault()
-    await addBook({ variables: { title, published: Number(published), author, genres } })
+    await addBook({ variables: { title: title, published: Number(published), author: author, genres: genres } })
 
     setTitle('')
     setPublished('')

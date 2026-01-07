@@ -3,17 +3,18 @@ interface values {
   value2: number,
 }
 
-const calculateBmi = (height: number, weight: number) => {
+
+const calculateBmi = (height: number, weight: number): string => {
   const denominator = height / 100;
   const bmi = (weight / (denominator * denominator));
   if (bmi < 18.5) {
-    console.log('Underweight');
+    return 'Underweight'
   } else if (bmi < 25) {
-    console.log('Normal weight');
+    return 'Normal weight'
   } else if (bmi < 30) {
-    console.log('Overweight');
+    return 'Overweight'
   }else {
-    console.log('Obese');
+    return 'Obese'
   }
 
 }
@@ -31,14 +32,23 @@ const parseValues = (args: string[]): values => {
     throw new Error('provided args are not numbers')
   }
 }
-try {
-  const { value1, value2 } = parseValues(process.argv)
-  calculateBmi(value1, value2);
-} catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
-  if (error instanceof Error) {
-    errorMessage += ' Error: ' + error.message;
+
+const getBmi = (height: number, weight: number): string => {
+  try {
+    if (require.main === module) {
+      const { value1, value2 } = parseValues(process.argv)
+      return calculateBmi(value1, value2);
+    }
+    return calculateBmi(height, weight);
+  } catch (error: unknown) {
+    let errorMessage = 'Something bad happened.'
+    if (error instanceof Error) {
+      errorMessage += ' Error: ' + error.message;
+    }
+    return errorMessage;
   }
-  console.log(errorMessage);
 }
 
+console.log(getBmi(1,1))
+
+export { getBmi };

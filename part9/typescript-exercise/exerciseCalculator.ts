@@ -19,8 +19,8 @@ const calculateExercises = (hours : number[], target: number): result => {
   const sum = hours.reduce((sum, n) => sum + n, 0)
   const average = sum / hours.length
   const success = average >= target 
-  let rating
-  let ratingDescription
+  let rating = 0
+  let ratingDescription = 'none'
   if (average < target) {
     rating = 1
     ratingDescription = 'did not meet hours'

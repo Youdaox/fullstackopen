@@ -15,21 +15,21 @@ interface result {
 
 
 const calculateExercises = (hours : number[], target: number): result => {
-  const trainingDays = hours.filter(h => h > 0).length
-  const sum = hours.reduce((sum, n) => sum + n, 0)
-  const average = sum / hours.length
-  const success = average >= target 
-  let rating = 0
-  let ratingDescription = 'none'
+  const trainingDays = hours.filter(h => h > 0).length;
+  const sum = hours.reduce((sum, n) => sum + n, 0);
+  const average = sum / hours.length;
+  const success = average >= target;
+  let rating = 0;
+  let ratingDescription = 'none';
   if (average < target) {
-    rating = 1
-    ratingDescription = 'did not meet hours'
+    rating = 1;
+    ratingDescription = 'did not meet hours';
   } else if (average === target) {
-    rating = 2
-    ratingDescription = 'hours were met'
+    rating = 2;
+    ratingDescription = 'hours were met';
   } else if (average > target) {
-    rating = 3
-    ratingDescription = 'hours exceeded target'
+    rating = 3;
+    ratingDescription = 'hours exceeded target';
   }
 
   return {
@@ -40,8 +40,8 @@ const calculateExercises = (hours : number[], target: number): result => {
     ratingDescription: ratingDescription,
     target: target,
     average: average,
-  }
-}
+  };
+};
 
 const parseArgs = (args: string[]): Values => {
   let array: number[] = [];
@@ -60,15 +60,15 @@ const parseArgs = (args: string[]): Values => {
   return {
     target: Number(args[2]),
     array: array,
-  }
-}
+  };
+};
 
 try {
   const { target, array } = parseArgs(process.argv);
-  console.log(target, array)
-  console.log(calculateExercises(array, target))
+  console.log(target, array);
+  console.log(calculateExercises(array, target));
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }

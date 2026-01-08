@@ -8,16 +8,16 @@ const calculateBmi = (height: number, weight: number): string => {
   const denominator = height / 100;
   const bmi = (weight / (denominator * denominator));
   if (bmi < 18.5) {
-    return 'Underweight'
+    return 'Underweight';
   } else if (bmi < 25) {
-    return 'Normal weight'
+    return 'Normal weight';
   } else if (bmi < 30) {
-    return 'Overweight'
+    return 'Overweight';
   }else {
-    return 'Obese'
+    return 'Obese';
   }
 
-}
+};
 
 const parseValues = (args: string[]): values => {
   if (args.length < 4) throw new Error('not enough args');
@@ -27,28 +27,27 @@ const parseValues = (args: string[]): values => {
     return {
       value1: Number(args[2]),
       value2: Number(args[3])
-    }
+    };
   } else {
-    throw new Error('provided args are not numbers')
+    throw new Error('provided args are not numbers');
   }
-}
+};
 
-const getBmi = (height: number, weight: number): string => {
+export const getBmi = (height: number, weight: number): string => {
   try {
     if (require.main === module) {
-      const { value1, value2 } = parseValues(process.argv)
+      const { value1, value2 } = parseValues(process.argv);
       return calculateBmi(value1, value2);
     }
     return calculateBmi(height, weight);
   } catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
     }
     return errorMessage;
   }
-}
+};
 
-console.log(getBmi(1,1))
+console.log(getBmi(1,1));
 
-export { getBmi };

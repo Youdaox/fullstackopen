@@ -1,5 +1,5 @@
 import { DiaryEntry } from "../src/types";
-import toNewDiaryEntry from "../src/utils";
+import { newEntrySchema } from "../src/utils";
 
 const data = [
   {
@@ -33,9 +33,11 @@ const data = [
 ];
 
 const diaryEntries: DiaryEntry [] = data.map(obj => {
-  const object = toNewDiaryEntry(obj) as DiaryEntry;
-  object.id = obj.id;
-  return object;
+  const object = newEntrySchema.parse(obj);
+  return {
+    id: obj.id,
+    ...object
+  };
 });
 
 export default diaryEntries;

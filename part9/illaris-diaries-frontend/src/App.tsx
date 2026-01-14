@@ -18,7 +18,8 @@ const App = () => {
       {entries.map(e => {
         return (
           <div>
-            <p><strong>{e.date}</strong></p> <br />
+            <p><strong>{e.date}</strong></p>
+            <p>{e.comment}</p>
             <p>visibility: {e.visibility}</p>
             <p>weather: {e.weather}</p>
           </div>

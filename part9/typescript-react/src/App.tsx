@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import{ Note } from './types';
+import { getAllNotes, createNote } from './noteService';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [newNote, setNewNote] = useState('');
+  const [notes, setNotes] = useState<Note[]>([{ id: '1', content: 'testing' }]);
 
+  useEffect(() => {
+    getAllNotes().then(data => setNotes(data))
+  }, [])
+
+  const noteCreation = (event: React.SyntheticEvent) => {
+    event.preventDefault()
+    createNote({ content: newNote }).then(data => {
+      setNotes(notes.concat(data))
+    })
+
+    setNewNote('')
+  };
+  
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <form onSubmit={noteCreation}>
+        <input
+          value={newNote}
+          onChange={(event) => setNewNote(event.target.value)} 
+        />
+        <button type='submit'>add</button>
+      </form>
+
+      <ul>
+        {notes.map(note =>
+          <li key={note.id}>{note.content}</li>
+        )}
+      </ul>
+    </div>
   )
 }
 

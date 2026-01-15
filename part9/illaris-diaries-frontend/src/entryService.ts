@@ -7,3 +7,8 @@ export const getAllEntries = () => {
   return axios.get<Entry[]>(baseUrl)
     .then((response) => response.data)
 }
+
+export const addEntry = async (object: Entry)  => {
+    return await axios.post<Entry>(baseUrl, object)
+      .then(response => response.data)
+}

@@ -4,3 +4,7 @@ export interface Entry {
   visibility: string,
   comment?: string
 }
+
+export interface ValidationError {
+  error: Array<{ message: string }>
+}

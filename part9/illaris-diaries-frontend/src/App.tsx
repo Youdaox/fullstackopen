@@ -47,23 +47,32 @@ const App = () => {
         <div>
           date
           <input
+            type="date"
             value={date}
             onChange={(event) => setDate(event.target.value)} 
           />
         </div>
         <div>
           visibility
-          <input
-            value={visibility}
-            onChange={(event) => setVisibility(event.target.value)} 
-          />
+          <input type="radio" name="visibility" onChange={() => setVisibility('great')} />
+          great
+          <input type="radio" name="visibility" onChange={() => setVisibility('good')} />
+          good
+          <input type="radio" name="visibility" onChange={() => setVisibility('ok')} />
+          ok
+          <input type="radio" name="visibility" onChange={() => setVisibility('poor')} />
+          poor
         </div>
         <div>
           weather
-          <input
-            value={weather}
-            onChange={(event) => setWeather(event.target.value)} 
-          />
+          <input type="radio" name="weather" onChange={() => setWeather('rainy')} />
+          rainy
+          <input type="radio" name="weather" onChange={() => setWeather('cloudy')} />
+          cloudy
+          <input type="radio" name="weather" onChange={() => setWeather('stormy')} />
+          stormy
+          <input type="radio" name="weather" onChange={() => setWeather('windy')} />
+          windy
         </div>
         <div>
           comment

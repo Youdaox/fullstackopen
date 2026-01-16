@@ -30,6 +30,19 @@ const PatientDetailsPage = () => {
       </div>
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
+
+      <h2>Entries</h2>
+      {patient.entries.map(entry => (
+        <div>
+          <p>{entry.date} {entry.description}</p>
+          <div>
+            {entry.diagnosisCodes?.map(code => (
+              <li key={code}>{code}</li>
+            ))}
+          </div>
+        </div>
+      ))}
+      
     </div>
   );
 };

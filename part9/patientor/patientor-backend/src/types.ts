@@ -7,6 +7,9 @@ export enum Gender {
   Other = 'other',
 };
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Entry {
+}
 
 export type Diagnosis = {
     code: string,
@@ -16,8 +19,9 @@ export type Diagnosis = {
 
 export interface Patient extends newPatient {
   id: string,
+  entries: Entry[],
 };
 
 export type newPatient = z.infer<typeof patientSchema>;
 
-export type PatientExcludeSsn = Omit<Patient, 'ssn'>;
+export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;

@@ -2,13 +2,56 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import patientService from "../services/patients";
-import { Patient } from "../types";
+import { Diagnosis, Entry, Patient } from "../types";
 
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
-const PatientDetailsPage = () => {
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+
+const assertNever = (entry: never): never => {
+  throw new Error(`Unhandled entry type: ${JSON.stringify(entry)}`);
+}
+
+const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
+  switch (entry.type) {
+    case "Hospital":
+      return (
+        <div>
+          <p>{entry.date}</p>
+          <MedicalServicesIcon />
+          <p>{entry.description}</p>
+          <div>
+            <p>diagnosed by: {entry.specialist}</p>
+          </div>
+        </div>);
+    case "OccupationalHealthcare":
+      return (
+        <div>
+          <p>{entry.date}</p>
+          <MedicalServicesIcon />
+          <p>{entry.description}</p>
+          <div>
+            <p>diagnosed by: {entry.specialist}</p>
+          </div>
+        </div>);
+    case "HealthCheck":
+      return (
+        <div>
+          <p>{entry.date}</p>
+          <MedicalServicesIcon />
+          <p>{entry.description}</p>
+          <div>
+            <p>diagnosed by: {entry.specialist}</p>
+          </div>
+        </div>);
+    default:
+      return assertNever(entry);
+  }
+};
+
+const PatientDetailsPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
   const id = useParams().id;
   const [patient, setPatient] = useState<Patient | null>(null);
 
@@ -33,14 +76,7 @@ const PatientDetailsPage = () => {
 
       <h2>Entries</h2>
       {patient.entries.map(entry => (
-        <div>
-          <p>{entry.date} {entry.description}</p>
-          <div>
-            {entry.diagnosisCodes?.map(code => (
-              <li key={code}>{code}</li>
-            ))}
-          </div>
-        </div>
+        <EntryDetails key={entry.id} entry={entry}/>
       ))}
       
     </div>

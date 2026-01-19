@@ -9,6 +9,12 @@ import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import WorkIcon from '@mui/icons-material/Work';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
+import { Button } from '@mui/material';
+
 
 const assertNever = (entry: never): never => {
   throw new Error(`Unhandled entry type: ${JSON.stringify(entry)}`);
@@ -18,9 +24,11 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   switch (entry.type) {
     case "Hospital":
       return (
-        <div>
-          <p>{entry.date}</p>
-          <MedicalServicesIcon />
+        <div style={ { border: '1px solid black', padding: '10px', marginBottom: '10px' } }>
+          <div style={{ display: 'flex', alignItems: 'center' }}> 
+            <p>{entry.date}</p>
+            <MedicalServicesIcon />
+          </div>
           <p>{entry.description}</p>
           <div>
             <p>diagnosed by: {entry.specialist}</p>
@@ -28,20 +36,28 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
         </div>);
     case "OccupationalHealthcare":
       return (
-        <div>
-          <p>{entry.date}</p>
-          <MedicalServicesIcon />
-          <p>{entry.description}</p>
+        <div style={ { border: '1px solid black', padding: '10px', marginBottom: '10px' } }>
+          <div style={{ display: 'flex', alignItems: 'center' }}> 
+            <p>{entry.date}</p>
+            <WorkIcon />
+            <p>{entry.employerName}</p>
+          </div>
+          <p>{entry.description}</p> 
           <div>
             <p>diagnosed by: {entry.specialist}</p>
           </div>
         </div>);
     case "HealthCheck":
       return (
-        <div>
-          <p>{entry.date}</p>
-          <MedicalServicesIcon />
-          <p>{entry.description}</p>
+        <div style={ { border: '1px solid black', padding: '10px', marginBottom: '10px' } }>
+          <div style={{ display: 'flex', alignItems: 'center' }}> 
+            <p>{entry.date}</p>
+            <HealthAndSafetyIcon />
+          </div>
+          {entry.healthCheckRating === 0 ? <FavoriteIcon color='error' /> :
+           entry.healthCheckRating === 1 ? <FavoriteIcon color='primary' /> :
+           entry.healthCheckRating === 2 ? <FavoriteIcon color='warning' /> :
+           <FavoriteIcon color='success' /> }
           <div>
             <p>diagnosed by: {entry.specialist}</p>
           </div>
@@ -79,6 +95,9 @@ const PatientDetailsPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
         <EntryDetails key={entry.id} entry={entry}/>
       ))}
       
+      <Button variant="contained" color="primary">
+        Add New Entry
+      </Button>
     </div>
   );
 };

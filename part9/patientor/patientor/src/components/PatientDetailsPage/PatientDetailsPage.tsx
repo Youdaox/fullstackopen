@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import patientService from "../services/patients";
-import { Diagnosis, Entry, Patient } from "../types";
+import patientService from "../../services/patients";
+import { Diagnosis, Entry, EntryFormValues, Patient } from "../../types";
 
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
@@ -13,7 +13,9 @@ import WorkIcon from '@mui/icons-material/Work';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-import { Button } from '@mui/material';
+import { Alert, Button } from '@mui/material';
+import AddEntryForm from './AddEntryForm';
+import axios from 'axios';
 
 
 const assertNever = (entry: never): never => {
@@ -54,6 +56,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
             <p>{entry.date}</p>
             <HealthAndSafetyIcon />
           </div>
+          <p>{entry.description}</p>
           {entry.healthCheckRating === 0 ? <FavoriteIcon color='error' /> :
            entry.healthCheckRating === 1 ? <FavoriteIcon color='primary' /> :
            entry.healthCheckRating === 2 ? <FavoriteIcon color='warning' /> :
@@ -67,9 +70,11 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   }
 };
 
-const PatientDetailsPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
+const PatientDetailsPage = () => {
   const id = useParams().id;
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [addEntryForm, setAddEntryForm] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -81,8 +86,24 @@ const PatientDetailsPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
     return <p>loading ...</p>;
   }
 
+  const addEntry = async (object: EntryFormValues) => {
+    try {
+      await patientService.createEntry(id!, object).then(() => {
+        patientService.getById(id!).then(data => setPatient(data));
+        setAddEntryForm(false);
+      });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+      setError(error.response?.data.error[0]?.message);
+      setTimeout(() => setError(null), 5000);
+      }
+    }
+  }
   return (
     <div>
+      {error && <Alert severity="error">{error}</Alert>}
+
+      {addEntryForm && <AddEntryForm onSubmit={addEntry} onCancel={() => setAddEntryForm(false)} />}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <h2>{patient.name}</h2>
         {patient.gender === 'female' ? <FemaleIcon /> : patient.gender === 'male' ? <MaleIcon /> : <TransgenderIcon />}
@@ -94,10 +115,11 @@ const PatientDetailsPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
       {patient.entries.map(entry => (
         <EntryDetails key={entry.id} entry={entry}/>
       ))}
-      
-      <Button variant="contained" color="primary">
+      {!addEntryForm && 
+      <Button variant="contained" color="primary" onClick={() => setAddEntryForm(true)}>
         Add New Entry
       </Button>
+      }
     </div>
   );
 };

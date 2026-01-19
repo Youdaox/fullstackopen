@@ -8,7 +8,7 @@ import { Patient, Diagnosis } from "./types";
 
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
-import PatientDetailsPage from "./components/PatientDetailsPage";
+import PatientDetailsPage from "./components/PatientDetailsPage/PatientDetailsPage";
 
 import diagnosisService from "./services/diagnoses";
 
@@ -45,7 +45,7 @@ const App = () => {
           <Divider hidden />
           <Routes>
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
-            <Route path="/patients/:id" element={<PatientDetailsPage diagnoses={diagnoses} />} />
+            <Route path="/patients/:id" element={<PatientDetailsPage />} />
           </Routes>
         </Container>
       </Router>

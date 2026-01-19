@@ -74,6 +74,7 @@ const PatientDetailsPage = () => {
   const id = useParams().id;
   const [patient, setPatient] = useState<Patient | null>(null);
   const [addEntryForm, setAddEntryForm] = useState<boolean>(false);
+  const [entryFormType, setEntryFormType] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -103,7 +104,7 @@ const PatientDetailsPage = () => {
     <div>
       {error && <Alert severity="error">{error}</Alert>}
 
-      {addEntryForm && <AddEntryForm onSubmit={addEntry} onCancel={() => setAddEntryForm(false)} />}
+      {addEntryForm && <AddEntryForm onSubmit={addEntry} onCancel={() => setAddEntryForm(false)} type={entryFormType} />}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <h2>{patient.name}</h2>
         {patient.gender === 'female' ? <FemaleIcon /> : patient.gender === 'male' ? <MaleIcon /> : <TransgenderIcon />}
@@ -115,11 +116,17 @@ const PatientDetailsPage = () => {
       {patient.entries.map(entry => (
         <EntryDetails key={entry.id} entry={entry}/>
       ))}
-      {!addEntryForm && 
-      <Button variant="contained" color="primary" onClick={() => setAddEntryForm(true)}>
-        Add New Entry
+      {!addEntryForm && <>
+      <Button variant="contained" color="primary" onClick={() => {setAddEntryForm(true); setEntryFormType("HealthCheck")}}>
+        Add New HealthCheck Entry
       </Button>
-      }
+      <Button variant="contained" color="primary" onClick={() => {setAddEntryForm(true); setEntryFormType("Hospital")}}>
+        Add New Hospital Entry
+      </Button>
+      <Button variant="contained" color="primary" onClick={() => {setAddEntryForm(true); setEntryFormType("OccupationalHealthcare")}}>
+        Add New Occupational Healthcare Entry
+      </Button>
+      </>}
     </div>
   );
 };

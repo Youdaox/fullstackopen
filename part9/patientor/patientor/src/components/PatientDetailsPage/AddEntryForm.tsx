@@ -1,13 +1,13 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Input, Select, MenuItem } from "@mui/material";
 import { useState } from "react";
-import { EntryFormValues } from "../../types";
+import { Diagnosis, EntryFormValues } from "../../types";
 
-const AddEntryForm = ({ onSubmit, onCancel, type }: {onSubmit: (object: EntryFormValues) => void, onCancel: () => void, type: string}) => {
+const AddEntryForm = ({ onSubmit, onCancel, type, diagnoses }: {onSubmit: (object: EntryFormValues) => void, onCancel: () => void, type: string, diagnoses: Diagnosis[]}) => {
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
     const [specialist, setSpecialist] = useState("");   
-    const [healthCheckRating, setHealthCheckRating] = useState<number>();
-    const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>();
+    const [healthCheckRating, setHealthCheckRating] = useState<number>(0);
+    const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
     const [employerName, setEmployerName] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -53,7 +53,7 @@ const AddEntryForm = ({ onSubmit, onCancel, type }: {onSubmit: (object: EntryFor
           throw new Error(`Unhandled entry type: ${type}`);
       }
       onSubmit(newEntry);
-    }
+    };
 
     return (
       <div>
@@ -66,12 +66,10 @@ const AddEntryForm = ({ onSubmit, onCancel, type }: {onSubmit: (object: EntryFor
            value={description}  
            onChange={({ target }) => setDescription(target.value)}
            />
-          <TextField id="standard-basic"
-           label="date" 
-           fullWidth
-           variant="standard"
+          <Input
+           type="date"
            value={date}  
-           onChange={({ target }) => setDate(target.value)}
+           onChange={({target}) => setDate(target.value)}
            />
           <TextField id="standard-basic"
            label="specialist" 
@@ -81,21 +79,24 @@ const AddEntryForm = ({ onSubmit, onCancel, type }: {onSubmit: (object: EntryFor
            onChange={({ target }) => setSpecialist(target.value)}
            />
             {type === "HealthCheck" &&
-            <TextField id="standard-basic"
+            <Select
             label="healthCheckRating" 
-            fullWidth
             variant="standard"
+            fullWidth
             value={healthCheckRating}  
             onChange={({ target }) => setHealthCheckRating(Number(target.value))}
-            />}
+            >
+              <MenuItem value={0}>0</MenuItem>
+              <MenuItem value={1}>1</MenuItem>
+              <MenuItem value={2}>2</MenuItem>
+              <MenuItem value={3}>3</MenuItem>
+            </Select>}
 
             {type === "Hospital" && <>
-            <TextField id="standard-basic"
-            label="dischargeDate" 
-            fullWidth
-            variant="standard"
+            <Input
+            type="date"
             value={dischargeDate}  
-            onChange={({ target }) => setDischargeDate(target.value)}
+            onChange={({target}) => setDischargeDate(target.value)}
             />
             <TextField id="standard-basic"
             label="criteria" 
@@ -113,28 +114,29 @@ const AddEntryForm = ({ onSubmit, onCancel, type }: {onSubmit: (object: EntryFor
             value={employerName}  
             onChange={({ target }) => setEmployerName(target.value)}
             />
-            <TextField id="standard-basic"
-            label="startDate" 
-            fullWidth
-            variant="standard"
+            <Input
+            type="date"
             value={startDate}  
-            onChange={({ target }) => setStartDate(target.value)}
+            onChange={({target}) => setStartDate(target.value)}
             />
-            <TextField id="standard-basic"
-            label="endDate" 
-            fullWidth
-            variant="standard"
+            <Input
+            type="date"
             value={endDate}  
-            onChange={({ target }) => setEndDate(target.value)}
-            /></>}
-
-          <TextField id="standard-basic"
+            onChange={({target}) => setEndDate(target.value)}
+            />
+          </>}
+          <Select
+           multiple 
            label="diagnosisCodes" 
            fullWidth
            variant="standard"
            value={diagnosisCodes}  
-           onChange={({ target }) => setDiagnosisCodes(target.value.split(","))}
-           />
+           onChange={({ target }) => setDiagnosisCodes(typeof target.value === 'string' ? target.value.split(',') : target.value)}
+           >
+            {diagnoses.map(c => (
+              <MenuItem key={c.code} value={c.code}>{c.code}</MenuItem>
+            ))}
+           </Select>
           <Button variant="contained" color="error" onClick={onCancel}>
             Cancel
           </Button>
@@ -143,7 +145,7 @@ const AddEntryForm = ({ onSubmit, onCancel, type }: {onSubmit: (object: EntryFor
           </Button>
         </form>
       </div>
-    )
+    );
 };
 
 export default AddEntryForm;

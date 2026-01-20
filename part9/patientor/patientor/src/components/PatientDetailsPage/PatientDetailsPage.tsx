@@ -70,7 +70,7 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   }
 };
 
-const PatientDetailsPage = () => {
+const PatientDetailsPage = ({diagnoses} : {diagnoses: Diagnosis[]}) => {
   const id = useParams().id;
   const [patient, setPatient] = useState<Patient | null>(null);
   const [addEntryForm, setAddEntryForm] = useState<boolean>(false);
@@ -99,12 +99,12 @@ const PatientDetailsPage = () => {
       setTimeout(() => setError(null), 5000);
       }
     }
-  }
+  };
   return (
     <div>
       {error && <Alert severity="error">{error}</Alert>}
 
-      {addEntryForm && <AddEntryForm onSubmit={addEntry} onCancel={() => setAddEntryForm(false)} type={entryFormType} />}
+      {addEntryForm && <AddEntryForm onSubmit={addEntry} onCancel={() => setAddEntryForm(false)} type={entryFormType} diagnoses={diagnoses}/>}
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <h2>{patient.name}</h2>
         {patient.gender === 'female' ? <FemaleIcon /> : patient.gender === 'male' ? <MaleIcon /> : <TransgenderIcon />}
